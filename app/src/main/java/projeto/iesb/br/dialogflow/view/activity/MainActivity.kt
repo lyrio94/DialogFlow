@@ -1,4 +1,4 @@
-package projeto.iesb.br.dialogflow
+package projeto.iesb.br.dialogflow.view.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,6 +8,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import projeto.iesb.br.dialogflow.R
 import projeto.iesb.br.dialogflow.domain.Message
 import projeto.iesb.br.dialogflow.domain.Response
 import retrofit2.Retrofit
@@ -15,6 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var retrofit: Retrofit
@@ -25,9 +27,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         retrofit = createRetrofit()
         dialogFlow= retrofit.create(HerokuDialogFlow::class.java)
+        btSend.setOnClickListener { send() }
 
     }
-    fun send(){
+     private fun send(){
      GlobalScope.launch(Dispatchers.Main){
          val question = etQuestion.text.toString()
          val message = Message(question, "", "123")
@@ -39,7 +42,7 @@ class MainActivity : AppCompatActivity() {
      }
 
  }
-    private fun createRetrofit(): Retrofit {
+     private fun createRetrofit(): Retrofit {
         val logInterceptor = HttpLoggingInterceptor()
         logInterceptor.level = HttpLoggingInterceptor.Level.BODY
 
@@ -47,18 +50,19 @@ class MainActivity : AppCompatActivity() {
 
         return Retrofit.Builder()
             .client(client)
-            .baseUrl("https://botcatador2.herokuapp.com//api/")
+            .baseUrl("https://botcatador2.herokuapp.com/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+    }
+    interface HerokuDialogFlow {
+
+        @POST("message/text/send")
+        @Headers("Content-Type: application/json")
+        suspend fun sendMessageAsync(@Body message: Message): Array<Response>
+
     }
 
 }
 
 
-interface HerokuDialogFlow {
 
-    @POST("message/text/send")
-    @Headers("Content-Type: application/json")
-    suspend fun sendMessageAsync(@Body message: Message): Array<Response>
-
-}

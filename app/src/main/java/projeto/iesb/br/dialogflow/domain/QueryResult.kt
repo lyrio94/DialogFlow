@@ -1,4 +1,5 @@
 package projeto.iesb.br.dialogflow.domain
 
-class QueryResult {
-}
+data class QueryResult (
+    val fulfillmentText: String
+)

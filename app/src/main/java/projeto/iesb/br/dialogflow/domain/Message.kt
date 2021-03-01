@@ -1,4 +1,7 @@
 package projeto.iesb.br.dialogflow.domain
 
-class Message {
-}
+data class  Message(
+    val text: String,
+    val email:String,
+    val sessionId:String
+)
