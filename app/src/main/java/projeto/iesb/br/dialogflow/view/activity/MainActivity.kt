@@ -8,6 +8,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import projeto.iesb.br.dialogflow.domain.Message
+import projeto.iesb.br.dialogflow.domain.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
@@ -24,9 +26,8 @@ class MainActivity : AppCompatActivity() {
         retrofit = createRetrofit()
         dialogFlow= retrofit.create(HerokuDialogFlow::class.java)
 
-        btSend.setOnClickListener { send() }
     }
- private fun send(){
+    fun send(){
      GlobalScope.launch(Dispatchers.Main){
          val question = etQuestion.text.toString()
          val message = Message(question, "", "123")
@@ -46,25 +47,13 @@ class MainActivity : AppCompatActivity() {
 
         return Retrofit.Builder()
             .client(client)
-            .baseUrl("https://dialogflow-app-testemobile.herokuapp.com/api/")
+            .baseUrl("https://botcatador2.herokuapp.com//api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
 }
-data class  Message(
-    val text: String,
-    val email:String,
-    val sessionId:String
-)
 
-data class QueryResult (
-    val fulfillmentText: String
-)
-
-data class Response (
-    val queryResult: QueryResult
-)
 
 interface HerokuDialogFlow {
 
